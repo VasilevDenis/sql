@@ -1,0 +1,60 @@
+BEGIN;
+
+CREATE TABLE IF NOT EXISTS albums
+(
+    id serial PRIMARY KEY,
+    title varchar(255) NOT NULL,
+    release_year date NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS artists
+(
+    id serial PRIMARY KEY,
+    title varchar(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS collections
+(
+    id serial PRIMARY KEY,
+    title varchar(255) NOT NULL,
+    release_year date NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS genres
+(
+    id serial PRIMARY KEY,
+    title varchar(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS tracks
+(
+    id serial PRIMARY KEY,
+    title varchar(255) NOT NULL,
+    duration interval  NOT NULL,
+    artist_id integer  NOT NULL REFERENCES artists(id),
+    album_id integer  NOT NULL REFERENCES albums(id),
+    genre_id integer  NOT NULL REFERENCES genres(id)
+);
+
+CREATE TABLE IF NOT EXISTS albums_artists
+(
+    album_id integer NOT NULL REFERENCES albums(id),
+    artist_id integer NOT NULL REFERENCES artists(id),
+	CONSTRAINT pk_album_artist PRIMARY KEY (album_id, artist_id)
+);
+
+CREATE TABLE IF NOT EXISTS genres_artists
+(
+    genre_id integer  NOT NULL REFERENCES genres(id),
+    artist_id integer  NOT NULL REFERENCES artists(id),
+	CONSTRAINT pk_genre_artist PRIMARY KEY (genre_id, artist_id)
+);
+
+CREATE TABLE IF NOT EXISTS collections_tracks
+(
+    collection_id integer NOT NULL REFERENCES collections(id),
+    track_id integer NOT NULL REFERENCES tracks(id),
+	CONSTRAINT pk_collection_track PRIMARY KEY (collection_id, track_id)
+);
+
+END;
